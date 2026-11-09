@@ -159,7 +159,8 @@ export default function App() {
         openDoc(d, own);
         if (!own) setBanner(`Estás viendo una copia de «${d.title}»${d.ownerName ? `, compartido por ${d.ownerName}` : ""}. Tus cambios no modifican el original.`);
       })
-      .catch((e) => setBanner(e instanceof Error ? e.message : "No se pudo abrir el enlace."));
+      // Firestore responde «permiso denegado» tanto si el proyecto es privado como si ya no existe
+      .catch(() => setBanner("El proyecto compartido no existe o ya no es público. Pide a su autor un enlace nuevo."));
   }, [cloudReady, backend, user, openDoc]);
 
   const p = project ?? emptyProject();
