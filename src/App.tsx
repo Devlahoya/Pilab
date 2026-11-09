@@ -78,7 +78,8 @@ function uniqueSymbol(rows: VariableRow[], symbol: string): string {
 
 export default function App() {
   const [project, setProject] = useState<Project | null>(loadProject);
-  const [view, setView] = useState<View>(() => (project ? "analisis" : "plantillas"));
+  // Siempre se abre en Inicio; el último análisis sigue guardado y se ve en «Análisis».
+  const [view, setView] = useState<View>("plantillas");
   const [tab, setTab] = useState<"resultado" | "procedimiento">("resultado");
   const [toast, setToast] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
