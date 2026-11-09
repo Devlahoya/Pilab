@@ -1,0 +1,4 @@
+# Saltos de línea uniformes (LF) en el repositorio, sin importar el sistema operativo
+* text=auto eol=lf
+*.png binary
+*.jpg binary
