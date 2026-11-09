@@ -1,26 +1,54 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useCloud } from "../../cloud/CloudContext";
-import { AVATARS, AvatarId } from "../../cloud/types";
+import { AvatarId } from "../../cloud/types";
+import { Avatar, AvatarGroup, DEFAULT_AVATAR, EMBLEMS, INITIALS, MASCOTS, avatarGroup, avatarLabel } from "../avatars";
 
 type Mode = "entrar" | "crear" | "recuperar" | "perfil";
 
-export function AvatarPicker({ value, onChange }: { value: AvatarId; onChange: (a: AvatarId) => void }) {
+const GROUPS: { id: AvatarGroup; label: string; ids: string[] }[] = [
+  { id: "personaje", label: "Personaje", ids: MASCOTS.map((m) => m.id) },
+  { id: "ciencia", label: "Ciencia", ids: EMBLEMS.map((e) => e.id) },
+  { id: "iniciales", label: "Iniciales", ids: INITIALS.map((i) => i.id) },
+];
+
+export function AvatarPicker({ value, onChange, name }: { value: AvatarId; onChange: (a: AvatarId) => void; name: string }) {
+  const [group, setGroup] = useState<AvatarGroup>(() => avatarGroup(value));
+  const ids = GROUPS.find((g) => g.id === group)!.ids;
+  const displayName = name.trim() || "Tu nombre";
   return (
-    <div className="avatar-picker" role="radiogroup" aria-label="Elige tu avatar">
-      {AVATARS.map((a) => (
-        <button
-          type="button"
-          key={a.id}
-          role="radio"
-          aria-checked={value === a.id}
-          className={`avatar-opt ${value === a.id ? "on" : ""}`}
-          onClick={() => onChange(a.id)}
-          title={a.label}
-        >
-          <img src={a.face} alt={`Avatar ${a.label}`} width={64} height={64} />
-          <span>{a.label}</span>
-        </button>
-      ))}
+    <div className="avatar-picker">
+      <div className="avatar-preview" aria-live="polite">
+        <Avatar id={value} name={displayName} size={64} />
+        <div>
+          <span className="muted small">Así te verán</span>
+          <strong>{displayName}</strong>
+          <span className="muted small">{avatarLabel(value)}</span>
+        </div>
+      </div>
+      <div className="seg avatar-tabs" role="tablist" aria-label="Tipo de avatar">
+        {GROUPS.map((g) => (
+          <button type="button" key={g.id} role="tab" aria-selected={group === g.id} className={group === g.id ? "on" : ""} onClick={() => setGroup(g.id)}>
+            {g.label}
+          </button>
+        ))}
+      </div>
+      <div className={`avatar-grid avatar-grid-${group}`} role="radiogroup" aria-label="Elige tu avatar">
+        {ids.map((id) => (
+          <button
+            type="button"
+            key={id}
+            role="radio"
+            aria-checked={value === id}
+            aria-label={avatarLabel(id)}
+            title={avatarLabel(id)}
+            className={`avatar-opt ${value === id ? "on" : ""}`}
+            onClick={() => onChange(id)}
+          >
+            <Avatar id={id} name={displayName} size={group === "personaje" ? 72 : 48} />
+            {group === "personaje" && <span>{avatarLabel(id)}</span>}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
@@ -31,7 +59,7 @@ export function AuthDialog({ initial = "entrar", onClose }: { initial?: Mode; on
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState(user?.name ?? "");
-  const [avatar, setAvatar] = useState<AvatarId>(user?.avatar ?? 1);
+  const [avatar, setAvatar] = useState<AvatarId>(user?.avatar ?? DEFAULT_AVATAR);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
@@ -118,7 +146,7 @@ export function AuthDialog({ initial = "entrar", onClose }: { initial?: Mode; on
               </label>
               <div className="field-col">
                 <span>Avatar</span>
-                <AvatarPicker value={avatar} onChange={setAvatar} />
+                <AvatarPicker value={avatar} onChange={setAvatar} name={name} />
               </div>
             </>
           )}

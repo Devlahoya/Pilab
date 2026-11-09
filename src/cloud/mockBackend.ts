@@ -5,6 +5,7 @@
  * No guarda contraseñas: cualquier contraseña de 6+ caracteres es válida.
  */
 import { AvatarId, CloudBackend, CloudDoc, CloudError, CloudUser, SaveInput } from "./types";
+import { normalizeAvatar } from "../ui/avatars";
 
 const KEY = "pilab.mockcloud.v1";
 
@@ -38,7 +39,7 @@ export class MockBackend implements CloudBackend {
   }
   private current(): CloudUser | null {
     const u = this.s.session ? Object.values(this.s.users).find((x) => x.uid === this.s.session) : undefined;
-    return u ?? null;
+    return u ? { ...u, avatar: normalizeAvatar(u.avatar) } : null;
   }
   private emit() {
     const u = this.current();

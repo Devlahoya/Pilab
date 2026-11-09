@@ -79,7 +79,7 @@ proyectos; no se usa en la versión publicada.
 
 | Colección | Documento | Campos |
 |---|---|---|
-| `users` | `{uid}` | `name`, `avatar` (1, 2 o 3) |
+| `users` | `{uid}` | `name`, `avatar` (id de texto: `m1`–`m3` personaje, `e-…` ciencia, `ini-…` iniciales) |
 | `projects` | id automático | `owner`, `ownerName`, `title`, `kind` (`analisis` / `simulacion`), `payload` (JSON), `isPublic`, `createdAt`, `updatedAt` |
 
 Un proyecto compartido se abre con `https://tu-sitio.netlify.app/?ver=<id>`; quien lo abre

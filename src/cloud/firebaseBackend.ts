@@ -36,6 +36,7 @@ import {
   where,
 } from "firebase/firestore/lite"; // versión ligera: sin tiempo real, mucho menor
 import { AvatarId, CloudBackend, CloudDoc, CloudError, CloudUser, SaveInput } from "./types";
+import { normalizeAvatar } from "../ui/avatars";
 
 export interface FirebaseConfig {
   apiKey: string;
@@ -90,10 +91,10 @@ export class FirebaseBackend implements CloudBackend {
       }
       try {
         const snap = await getDoc(doc(this.db, "users", fu.uid));
-        const d = snap.data() as { name?: string; avatar?: AvatarId } | undefined;
-        this.profile = { name: d?.name ?? fu.displayName ?? fu.email?.split("@")[0] ?? "Usuario", avatar: d?.avatar ?? 1 };
+        const d = snap.data() as { name?: string; avatar?: unknown } | undefined;
+        this.profile = { name: d?.name ?? fu.displayName ?? fu.email?.split("@")[0] ?? "Usuario", avatar: normalizeAvatar(d?.avatar) };
       } catch {
-        this.profile = { name: fu.displayName ?? "Usuario", avatar: 1 };
+        this.profile = { name: fu.displayName ?? "Usuario", avatar: normalizeAvatar(undefined) };
       }
       cb({ uid: fu.uid, email: fu.email ?? "", ...this.profile });
     });

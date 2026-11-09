@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useCloud } from "../../cloud/CloudContext";
-import { AVATARS } from "../../cloud/types";
+import { Avatar } from "../avatars";
 
 export function AccountButton({
   onLogin,
@@ -32,17 +32,16 @@ export function AccountButton({
       </button>
     );
   }
-  const av = AVATARS.find((a) => a.id === user.avatar) ?? AVATARS[0];
   return (
     <div className="account" ref={ref}>
-      <button className="account-btn" onClick={() => setOpen((o) => !o)} aria-haspopup="menu" aria-expanded={open}>
-        <img src={av.face} alt="" width={32} height={32} />
+      <button className="account-btn" onClick={() => setOpen((o) => !o)} aria-haspopup="menu" aria-expanded={open} aria-label={`Cuenta de ${user.name}`}>
+        <Avatar id={user.avatar} name={user.name} size={32} />
         <span className="account-name">{user.name}</span>
       </button>
       {open && (
         <div className="account-menu" role="menu">
           <div className="account-head">
-            <img src={av.face} alt="" width={44} height={44} />
+            <Avatar id={user.avatar} name={user.name} size={44} />
             <div>
               <strong>{user.name}</strong>
               <span className="muted small">{user.email}</span>

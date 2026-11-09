@@ -3,7 +3,8 @@
  * interfaz; la implementación real usa Firebase (Auth + Firestore).
  */
 
-export type AvatarId = 1 | 2 | 3;
+/** Id del avatar (ver src/ui/avatars.tsx), p. ej. "m1", "e-dna", "ini-teal". */
+export type AvatarId = string;
 
 export interface CloudUser {
   uid: string;
@@ -50,9 +51,3 @@ export interface CloudBackend {
 }
 
 export class CloudError extends Error {}
-
-export const AVATARS: { id: AvatarId; face: string; full: string; label: string }[] = [
-  { id: 1, face: "/img/avatar1.jpg", full: "/img/mascota1.jpg", label: "Laboratorio" },
-  { id: 2, face: "/img/avatar2.jpg", full: "/img/mascota2.jpg", label: "Biorreactor" },
-  { id: 3, face: "/img/avatar3.jpg", full: "/img/mascota3.jpg", label: "Diseño" },
-];

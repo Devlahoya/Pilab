@@ -17,7 +17,7 @@ describe("Backend de demostración (mismo contrato que Firebase)", () => {
 
   it("crear, actualizar (sin duplicar), listar y borrar", async () => {
     const b = new MockBackend();
-    await b.signUp("a@b.mx", "secreto1", "Ana", 2);
+    await b.signUp("a@b.mx", "secreto1", "Ana", "e-dna");
     const d1 = await b.save({ id: undefined, title: "Uno", kind: "analisis", payload: "{}" });
     expect(d1.id).toBeTruthy();
     const d2 = await b.save({ id: d1.id, title: "Uno (v2)", kind: "analisis", payload: '{"x":1}' });
@@ -31,10 +31,10 @@ describe("Backend de demostración (mismo contrato que Firebase)", () => {
 
   it("los proyectos privados no los ve otra cuenta; los compartidos sí", async () => {
     const b = new MockBackend();
-    await b.signUp("a@b.mx", "secreto1", "Ana", 1);
+    await b.signUp("a@b.mx", "secreto1", "Ana", "m1");
     const d = await b.save({ title: "Privado", kind: "simulacion", payload: "{}" });
     await b.signOut();
-    await b.signUp("c@d.mx", "secreto2", "Beto", 3);
+    await b.signUp("c@d.mx", "secreto2", "Beto", "ini-teal");
     await expect(b.get(d.id)).rejects.toThrow();
     await b.signOut();
     await b.signIn("a@b.mx", "secreto1");
@@ -45,8 +45,8 @@ describe("Backend de demostración (mismo contrato que Firebase)", () => {
 
   it("valida contraseña y correo duplicado", async () => {
     const b = new MockBackend();
-    await expect(b.signUp("a@b.mx", "123", "Ana", 1)).rejects.toThrow(/6 caracteres/);
-    await b.signUp("a@b.mx", "secreto1", "Ana", 1);
-    await expect(b.signUp("a@b.mx", "secreto1", "Ana", 1)).rejects.toThrow(/Ya existe/);
+    await expect(b.signUp("a@b.mx", "123", "Ana", "m1")).rejects.toThrow(/6 caracteres/);
+    await b.signUp("a@b.mx", "secreto1", "Ana", "m1");
+    await expect(b.signUp("a@b.mx", "secreto1", "Ana", "m1")).rejects.toThrow(/Ya existe/);
   });
 });
