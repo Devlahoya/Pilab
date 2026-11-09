@@ -46,20 +46,22 @@ export function ProjectsView({
         <div className="empty-hero">
           <img src="/img/mascota1.jpg" alt="" className="empty-mascot" />
           <div>
-            <h1>Mis proyectos en la nube</h1>
+            <h1>Mis proyectos</h1>
             <p>
-              Para guardar análisis y simulaciones en la nube y compartirlos con un enlace, la app necesita conectarse a un
-              proyecto de <strong>Firebase</strong> (gratis y sin pausas por inactividad).
+              Muy pronto podrás crear una cuenta para guardar tus análisis y simulaciones en la nube, abrirlos desde cualquier
+              dispositivo y compartirlos con un enlace.
             </p>
-            <ol>
-              <li>Crea un proyecto en console.firebase.google.com y agrega una «App web».</li>
-              <li>Activa Authentication → Correo/contraseña y crea la base Firestore.</li>
-              <li>Pega las reglas de firestore.rules y copia las claves a .env.local y a Netlify.</li>
-            </ol>
-            <p className="muted small">
-              Los pasos detallados están en <code>docs/FIREBASE.md</code>. Mientras tanto, todo funciona localmente: tu
-              análisis se guarda en este navegador y puedes usar «Guardar archivo».
+            <p>
+              Mientras tanto, la app funciona completa: tu análisis se guarda automáticamente en este navegador y puedes
+              descargarlo o abrirlo con <strong>«Guardar archivo»</strong> y <strong>«Abrir archivo»</strong> en la sección
+              Análisis.
             </p>
+            {import.meta.env.DEV && (
+              <p className="alert alert-warn small">
+                (Sólo en desarrollo) La nube no está configurada: faltan las variables VITE_FIREBASE_* en .env.local. Ver
+                docs/FIREBASE.md, o abre la app con ?nube=demo para probar en modo demostración.
+              </p>
+            )}
             <button className="btn" onClick={onGuide}>
               Ver la guía de la app
             </button>
@@ -113,7 +115,8 @@ export function ProjectsView({
         <div>
           <h1>Mis proyectos</h1>
           <p className="muted">
-            Guardados en la nube ({backend.name}). Para agregar uno, usa «☁ Guardar en la nube» en un análisis o en el simulador.
+            Guardados en la nube{backend.name !== "Firebase" ? ` (${backend.name})` : ""}. Para agregar uno, usa «☁ Guardar en la
+            nube» en un análisis o en el simulador.
           </p>
         </div>
         <div className="seg">
